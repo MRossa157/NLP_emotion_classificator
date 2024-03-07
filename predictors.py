@@ -78,32 +78,3 @@ class NNModelPredictor(BasePredictor):
 
         predicted_class_names = [self.class_mapping[label] for label in predicted_labels]
         return predicted_class_names[0] if predicted_class_names else None
-    
-    
-    
-if __name__ == "__main__":
-    # predictor = NNModelPredictor(model_path=r"weights\DNN_f1_acc0.94.h5",
-    #                              vectorizer_path=r"weights\DNN_f1_acc0.94_tokenizer.json",
-    #                              debug_mode=True)
-    
-    NB_predictor = SimpleModelPredictor(model_path=r"weights/NB_f1_0.816.pkl",
-                                 vectorizer_path=r"weights/NB_f1_0.816_vectorizer.pkl",
-                                 debug_mode=False)
-    
-    LR_predictor = SimpleModelPredictor(model_path=r"weights\LR_f1_0.904.pkl",
-                                 vectorizer_path=r"weights\LR_f1_0.904_vectorizer.pkl",
-                                 debug_mode=False)
-    
-    DNN_predictor = NNModelPredictor(model_path=r"weights\DNN_f1_acc0.94.h5",
-                                 vectorizer_path=r"weights\DNN_f1_acc0.94_tokenizer.json",
-                                 debug_mode=False)
-    
-    test_phrases = ['I love you man, I really like your style', 'I hate life', "I'm not good"]
-    
-    
-    predictors = [NB_predictor, LR_predictor, DNN_predictor]
-    
-    for predictor in predictors:
-        for phrase in test_phrases:
-            print(predictor.get_prediction(phrase), sep=" ")
-        print()

@@ -1,0 +1,8 @@
+numpy
+joblib
+scikit-learn
+tensorflow
+nltk
+wordcloud
+matplotlib
+plotly

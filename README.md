@@ -37,6 +37,6 @@ i give you plenty of attention even when i fee…| 0 |
 
 # How to use
 - Download Dataset and place it in the dataset folder (should result in `./dataset/text.csv`)
-- Run `Model.ipynb` and execute all the code cells
-- Use the `predictors.py` module to create an instance of `Predictor` and load the model weights and its vectorizer into it.
-- Call the `get_prediction(text: str)` method
+- Run `Model.ipynb` and execute all the code cells to train each model
+- Use the `predictors.py` module to create an instance of `Predictor` and load the model weights and its vectorizer into it
+- Call the `get_prediction(text: str)` method to get prediction

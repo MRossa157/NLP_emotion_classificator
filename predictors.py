@@ -2,8 +2,6 @@ from abc import ABC
 
 import joblib
 import numpy as np
-import warnings
-warnings.filterwarnings("ignore")
 
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
@@ -19,18 +17,22 @@ from keras.preprocessing.text import tokenizer_from_json
 
 class BasePredictor(ABC):
     
-    def __init__(self, model_path: str, vectorizer_path: str, debug_mode = False) -> None:
+    def __init__(self, model_path: str, vectorizer_path: str, debug_mode: bool = False) -> None:
         self.debug_mode = debug_mode      
         self.class_mapping = {0: 'Sadness', 1: 'Joy', 2: 'Love', 3: 'Anger', 4: 'Fear', 5: 'Surprise'}       
         
     def get_prediction(self, text: str) -> str:
         raise NotImplementedError
     
+    def __print_if_debug(self, data):
+        if self.debug_mode:
+            print(data)
+        
+    
     
 class SimpleModelPredictor(BasePredictor):
-    def __init__(self, model_path: str, vectorizer_path: str, debug_mode=False) -> None:
+    def __init__(self, model_path: str, vectorizer_path: str, debug_mode: bool = False) -> None:
         super().__init__(model_path, vectorizer_path, debug_mode)
-        
         if not model_path.endswith(".pkl"):
             raise ValueError("Путь к модели должен содержать файл с расширением .pkl")
         
@@ -43,14 +45,14 @@ class SimpleModelPredictor(BasePredictor):
     def get_prediction(self, text: str) -> str:
         text_vectorized = self.vectorizer.transform([text])
         predictions = self.model.predict(text_vectorized)
-        if self.debug_mode:
-            print(predictions)
+        self.__print_if_debug(predictions)
+        
         predicted_class_names = self.class_mapping[int(predictions)]
         return predicted_class_names
     
     
 class NNModelPredictor(BasePredictor):
-    def __init__(self, model_path: str, vectorizer_path: str, debug_mode=False) -> None:
+    def __init__(self, model_path: str, vectorizer_path: str, debug_mode: bool = False) -> None:
         super().__init__(model_path, vectorizer_path, debug_mode)
         if not model_path.endswith(".h5"):
             raise ValueError("Путь к модели должен содержать файл с расширением .h5")
@@ -73,8 +75,7 @@ class NNModelPredictor(BasePredictor):
         predictions = self.model.predict(new_padded)
         
         predicted_labels = np.array(predictions.argmax(axis=1))
-        if self.debug_mode:
-            print(predicted_labels)
+        self.__print_if_debug(predictions)
 
         predicted_class_names = [self.class_mapping[label] for label in predicted_labels]
         return predicted_class_names[0] if predicted_class_names else None
